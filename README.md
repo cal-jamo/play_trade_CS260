@@ -8,7 +8,7 @@ Have you ever wanted to get into investing, but haven't known what to invest in?
 
 ### Design
 
-![Mock](IMG_0087.PNG)
+![Mock](Design.PNG)
 
 ### Key features
 
