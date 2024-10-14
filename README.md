@@ -42,3 +42,12 @@ For my html start up I laid out the structure of my individual pages and created
 
 I have now used the required HTML technology requirements by doing the following:
 - **HTML** - Uses correct HTML structure for application. 6 HTML pages. One for login, Home, invest, Sports news, and Portfolio.
+
+### CSS Startup:
+
+For this start up I Added color to my page and structured things using css as well as the bootstrap css framework.
+
+I used a header, main, and footer, and styled them to be able to adjust to the size of the screen. I also created rounded boxes to display the information that I will be adding to it. 
+
+I have now used the required CSS technology requirements, although I will continue to style as I add different components, by doing the following:
+- **CSS** - App styling that will be available to use on different screensizes although my target audience is a larger screen. Also using color contrast with the primary colors being black grey, and light grey. I will also use an electric blue as my interaction button when I start to add more components.
