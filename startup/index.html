@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css" />
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+        crossorigin="anonymous"
+    />
+    <title>Login - Play Trade</title>
+</head>
+<body class="bg-dark text-light">
+    <header class="container-fluid">
+        <nav class="navbar navbar-dark">
+            <a class="navbar-brand" href="#">Play Trade</a>
+            <div class="navbar-nav d-flex flex-row"> <!-- Added flex-row class -->
+                <a class="nav-link" href="invest.html">Invest</a>
+                <a class="nav-link" href="sportsNews.html">Sports News</a>
+                <a class="nav-link" href="home.html">Home</a>
+                <a class="nav-link" href="portfolio.html">Portfolio</a>
+                <a class="nav-link" href="#">User</a> <!-- Added login link -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container bg-secondary text-center my-5 p-4 rounded">
+        <h1 class="mb-4">Login to Your Account</h1>
+        <form action="/login" method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <a href="home.html" class="btn btn-primary">Login</a>
+        </form>
+    </main>
+
+    <footer class="bg-dark text-white-50 text-center py-3">
+        <p>Created by Calvin Jameson</p>
+        <p><a class="text-reset" href="https://github.com/cal-jamo/play_trade_CS260.git">GitHub Repository</a></p>
+    </footer>
+</body>
+</html>
