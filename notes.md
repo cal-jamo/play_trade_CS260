@@ -39,9 +39,6 @@ How would you display an image with a hyperlink in HTML?
 In the CSS box model, what is the ordering of the box layers starting at the inside and working out?
 Content, padding, border, margin.
 
-What will the following code output when executed using a for loop and console.log?
-Without seeing the actual code, it would depend on the content of the loop, but it typically outputs the value of each iteration.
-
 How would you use JavaScript to select an element with the id of “byu” and change the text color of that element to green?
 document.getElementById('byu').style.color = 'green';
 
