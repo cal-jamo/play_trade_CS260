@@ -45,9 +45,6 @@ document.getElementById('byu').style.color = 'green';
 What is the opening HTML tag for a paragraph, ordered list, unordered list, second level heading, first level heading, third level heading?
 Paragraph: p, ordered list: ol, unordered list: ul, second level heading: h2, first level heading: h1, third level heading: h3.
 
-How do you declare the document type to be html?
-<!DOCTYPE html>
-
 What is valid JavaScript syntax for if, else, for, while, switch statements?
 if (condition) { ... } else { ... }, for (initialization; condition; increment) { ... }, while (condition) { ... }, switch(expression) { case x: ... break; }.
 
