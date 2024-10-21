@@ -61,7 +61,7 @@ Is it possible to add new properties to JavaScript objects?
 Yes, you can add new properties like this: object.newProperty = value;
 
 If you want to include JavaScript on an HTML page, which tag do you use?
-<script>
+script
   
 Given the following HTML, what JavaScript could you use to set the text "animal" to "crow" and leave the "fish" text unaffected?
 Assuming "animal" is within an element with an ID, use: document.getElementById('animal').innerText = 'crow';
