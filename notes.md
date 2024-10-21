@@ -91,4 +91,4 @@ Port 443, 80, 22 is reserved for which protocol?
 Port 443: HTTPS, Port 80: HTTP, Port 22: SSH.
   
 What will the following code using Promises output when executed?
-Without specific code, it’s usually an asynchronous action that logs the resolved or rejected value of the promise.
+an asynchronous action that logs the resolved or rejected value of the promise.
