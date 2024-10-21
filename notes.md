@@ -57,9 +57,6 @@ Yes, you can add new properties like this: object.newProperty = value;
 If you want to include JavaScript on an HTML page, which tag do you use?
 script
   
-Given the following HTML, what JavaScript could you use to set the text "animal" to "crow" and leave the "fish" text unaffected?
-Assuming "animal" is within an element with an ID, use: document.getElementById('animal').innerText = 'crow';
-  
 Which of the following correctly describes JSON?
 JSON (JavaScript Object Notation) is a lightweight data-interchange format, easily readable by humans and parsable by machines.
   
