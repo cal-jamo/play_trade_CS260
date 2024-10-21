@@ -46,7 +46,7 @@ How would you use JavaScript to select an element with the id of “byu” and c
 document.getElementById('byu').style.color = 'green';
 
 What is the opening HTML tag for a paragraph, ordered list, unordered list, second level heading, first level heading, third level heading?
-Paragraph: <p>, ordered list: <ol>, unordered list: <ul>, second level heading: <h2>, first level heading: <h1>, third level heading: <h3>.
+Paragraph: p, ordered list: ol, unordered list: ul, second level heading: h2, first level heading: h1, third level heading: h3.
 
 How do you declare the document type to be html?
 <!DOCTYPE html>
