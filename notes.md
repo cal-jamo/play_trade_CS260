@@ -83,3 +83,8 @@ Port 443: HTTPS, Port 80: HTTP, Port 22: SSH.
   
 What will the following code using Promises output when executed?
 an asynchronous action that logs the resolved or rejected value of the promise.
+
+
+### REACT:
+
+I love how impactful using a router can be. You can then just implement all of your containers and create uniformity using the router!
