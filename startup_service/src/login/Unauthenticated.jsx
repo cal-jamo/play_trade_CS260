@@ -41,8 +41,8 @@ export function Unauthenticated(props) {
         <>
         <div>
             <div className='input-group mb-3'>
-            <span className='input-group-text'>@</span>
-            <input className='form-control' type='text' value={userName} onChange={(e) => setUserName(e.target.value)} placeholder='your@email.com' />
+            <span className='input-group-text'>Username</span>
+            <input className='form-control' type='text' value={userName} onChange={(e) => setUserName(e.target.value)} placeholder='username' />
             </div>
             <div className='input-group mb-3'>
             <span className='input-group-text'>🔒</span>
