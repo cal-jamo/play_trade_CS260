@@ -1,8 +1,6 @@
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
-const cors = require('cors');
-app.use(cors());
 
 // The scores and users are saved in memory and disappear whenever the service is restarted.
 let users = {};
@@ -27,51 +25,24 @@ apiRouter.post('/auth/create', async (req, res) => {
   if (user) {
     res.status(409).send({ msg: 'Existing user' });
   } else {
-    const user = {
-      email: req.body.email,
-      password: req.body.password,
-      token: uuid.v4(),
-      balance: 2000 // Starting balance of 2000 fake money
-    };
+    const user = { email: req.body.email, password: req.body.password, token: uuid.v4() };
     users[user.email] = user;
-    res.send({ token: user.token, balance: user.balance });
+
+    res.send({ token: user.token });
   }
 });
 
 // GetAuth login an existing user
 apiRouter.post('/auth/login', async (req, res) => {
-  const { token } = req.body;
-  const user = Object.values(users).find((u) => u.token === token);  // Assuming token is sent in the body
-  
+  const user = users[req.body.email];
   if (user) {
-    res.send({ token: user.token, balance: user.balance });
-  } else {
-    res.status(401).send({ msg: 'Unauthorized' });
+    if (req.body.password === user.password) {
+      user.token = uuid.v4();
+      res.send({ token: user.token });
+      return;
+    }
   }
-});
-
-apiRouter.post('/purchase', async (req, res) => {
-  const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Authorization header
-  
-  if (!token) {
-    return res.status(401).send({ msg: 'Unauthorized' });
-  }
-  
-  // Find the user by the token
-  const user = Object.values(users).find((u) => u.token === token);
-  
-  if (!user) {
-    return res.status(401).send({ msg: 'Unauthorized' });
-  }
-
-  // Proceed with the purchase logic
-  const { amount } = req.body;
-  if (user.balance >= amount) {
-    user.balance -= amount;  // Update the user's balance
-    res.send({ balance: user.balance });
-  } else {
-    res.status(400).send({ msg: 'Insufficient funds' });
-  }
+  res.status(401).send({ msg: 'Unauthorized' });
 });
 
 // DeleteAuth logout a user

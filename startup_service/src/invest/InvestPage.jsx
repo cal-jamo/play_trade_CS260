@@ -1,82 +1,79 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const InvestPage = () => {
-  const [balance, setBalance] = useState(0);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [balance, setBalance] = useState(2000); // Start with $2000
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    // Check if there's a token in localStorage
-    const token = localStorage.getItem('token');
-    
-    if (token) {
-      // Fetch user data (e.g., balance) using the stored token
-      fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),  // Send token for authentication
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.token) {
-            // Successfully authenticated, store the new token and set balance
-            localStorage.setItem('token', data.token);  // Store the new token (if updated)
-            setBalance(data.balance);  // Set the balance from the server
-          } else {
-            setError('Failed to authenticate');
-          }
-        })
-        .catch((err) => {
-          setError('Failed to authenticate');
-          console.error(err);
-        });
-    } else {
-      setError('No token found, please log in');
-    }
-  }, []);
-  
+  const [teams, setTeams] = useState([
+    { name: 'BYU Football', price: 35, sport: 'Football', shares: 4 },
+    { name: 'Suns', price: 57, sport: 'Basketball', shares: 3 },
+    { name: 'Dodgers', price: 73, sport: 'Baseball', shares: 5 },
+    { name: 'Chiefs', price: 61, sport: 'Football', shares: 2 },
+    { name: 'Lakers', price: 80, sport: 'Basketball', shares: 1 },
+    { name: 'Patriots', price: 44, sport: 'Football', shares: 5 },
+    { name: 'Mavericks', price: 92, sport: 'Basketball', shares: 4 },
+    { name: 'Jets', price: 26, sport: 'Football', shares: 1 },
+    { name: 'Jazz', price: 95, sport: 'Basketball', shares: 3 },
+    { name: 'Warriors', price: 67, sport: 'Basketball', shares: 5 },
+    { name: 'Rams', price: 53, sport: 'Football', shares: 2 },
+    { name: 'Yankees', price: 84, sport: 'Baseball', shares: 4 },
+    { name: 'Giants', price: 38, sport: 'Football', shares: 3 },
+    { name: 'Red Sox', price: 77, sport: 'Baseball', shares: 2 },
+    { name: 'Celtics', price: 88, sport: 'Basketball', shares: 1 },
+    { name: 'Cubs', price: 49, sport: 'Baseball', shares: 5 },
+    { name: 'Packers', price: 59, sport: 'Football', shares: 4 },
+    { name: 'Brewers', price: 32, sport: 'Baseball', shares: 3 },
+    { name: 'Bills', price: 47, sport: 'Football', shares: 2 },
+    { name: 'Astros', price: 71, sport: 'Baseball', shares: 1 },
+  ]);
 
-  const handlePurchase = (amount) => {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-  
-    if (!token) {
-      alert('Please log in to make a purchase');
-      return;
-    }
-  
-    if (balance >= amount) {
-      fetch('http://localhost:3000/api/purchase', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Send token in Authorization header
-        },
-        body: JSON.stringify({ amount }),  // Send purchase data
-      })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error('Purchase failed');
-          }
-          return res.json();
-        })
-        .then(data => {
-          setBalance(data.balance);  // Update balance after purchase
-        })
-        .catch((err) => {
-          setError('Purchase failed');
-          console.error(err);
-        });
+  const handlePurchase = (index) => {
+    const team = teams[index];
+
+    if (balance >= team.price && team.shares > 0) {
+      setBalance(balance - team.price); // Subtract price from balance
+
+      // Update the team's shares in the state
+      setTeams((prevTeams) =>
+        prevTeams.map((t, i) =>
+          i === index ? { ...t, shares: t.shares - 1 } : t
+        )
+      );
+
+      setError('');
+    } else if (team.shares === 0) {
+      setError('No shares available for this team!');
     } else {
-      alert('Not enough balance!');
+      setError('Not enough balance!');
     }
   };
 
   return (
-    <div>
-      <h1>Current Balance: {balance}</h1>
-      <button onClick={() => handlePurchase(100)}>Buy Athlete for 100</button>
-      <div>{error}</div>
+    <div className="container mt-5">
+      <h1 className="text-center mb-4">Current Balance: ${balance}</h1>
+      {error && <div className="alert alert-danger text-center">{error}</div>}
+
+      <div className="row">
+        {teams.map((team, index) => (
+          <div key={index} className="col-md-4 col-lg-3 mb-4">
+            <div className="card h-100">
+              <div className="card-body text-center">
+                <h5 className="card-title">{team.name}</h5>
+                <p className="card-text">Sport: {team.sport}</p>
+                <p className="card-text">Price: ${team.price}</p>
+                <p className="card-text">Shares: {team.shares}</p>
+                <button
+                  onClick={() => handlePurchase(index)}
+                  className="btn btn-success mt-3"
+                  disabled={team.shares === 0} // Disable button if no shares are left
+                >
+                  Buy
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
