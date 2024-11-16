@@ -55,4 +55,8 @@ I have now used the required CSS technology requirements, although I will contin
 
 ### React Startup:
 
-For this startup I transitioned everything I have to react. I used started with vite and using my html and css to create all my react components. I also implemented the react router and it is working great! I have now implemented the React component although I will change it as I implement my api integration as well as my backend!
+For this startup I transitioned everything I have to react. I used started with vite and using my html and css to create all my react components. I also implemented the react router and it is working great! I have now implemented the React component and created placeholder UI to show how the site will work and what it looks like!
+
+### Service startup:
+
+For this startup I set up my backend to allow for authentication and set up a 3rd party api to get sports news so you can stay up to date on teams and players doing well, and that info will guide your investments!
