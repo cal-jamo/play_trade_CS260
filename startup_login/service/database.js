@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 
-const uri = "mongodb+srv://calvinjameson02:FishBrainsAreGood2@play-trade-260.erubr.mongodb.net/?retryWrites=true&w=majority&appName=play-trade-260";
+const uri = "mongodb+srv://calvinjameson02:FishBrainsAreGood2@play-trade-260.erubr.mongodb.net/?retryWrites=true&w=majority&appName=play-trade-260&ssl=true";
 const client = new MongoClient(uri);
 const db = client.db('playtrade_cs260');
 const userCollection = db.collection('user');
