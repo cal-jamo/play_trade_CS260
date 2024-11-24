@@ -39,8 +39,16 @@ async function createUser(email, password) {
   return user;
 }
 
+async function removeToken(userId) {
+    await userCollection.updateOne(
+        { _id: userId },
+        { $unset: { token: "" } } // Remove the token field
+    );
+}
+  
 module.exports = {
-  getUser,
-  getUserByToken,
-  createUser,
+    getUser,
+    getUserByToken,
+    createUser,
+    removeToken, // Add the new function to the export
 };

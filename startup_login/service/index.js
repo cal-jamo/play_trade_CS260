@@ -1,6 +1,7 @@
 // index.js
 const cookieParser = require('cookie-parser');
 const express = require('express');
+const bcrypt = require('bcrypt');
 const path = require('path');
 const DB = require('./database.js');  // Import the database module
 
@@ -25,6 +26,7 @@ app.set('trust proxy', true);
 // Router for service endpoints
 const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
+const users = {};
 
 // CreateAuth token for a new user
 apiRouter.post('/auth/create', async (req, res) => {
@@ -55,8 +57,18 @@ apiRouter.post('/auth/login', async (req, res) => {
   res.status(401).send({ msg: 'Unauthorized' });
 });
 
-// DeleteAuth token if stored in cookie
-apiRouter.delete('/auth/logout', (_req, res) => {
+// DeleteAuth logout a user
+apiRouter.delete('/auth/logout', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  
+  // Find the user with the matching token and remove it from the database
+  const user = await DB.getUserByToken(authToken);
+  if (user) {
+    // Remove token from the database
+    await DB.removeToken(user._id);
+  }
+
+  // Clear the cookie
   res.clearCookie(authCookieName);
   res.status(204).end();
 });

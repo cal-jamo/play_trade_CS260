@@ -5,20 +5,24 @@ import { useNavigate } from 'react-router-dom';
 export function Authenticated(props) {
     const navigate = useNavigate();
 
-    async function logout() {
-        const response = await fetch('/api/auth/logout', {
-            method: 'delete',
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        });
-        if (response?.status === 200) {
-            localStorage.removeItem('userName');
-            props.onLogout();
-        } else {
-            console.error('Logout failed');
+    async function logoutUser() {
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'DELETE',
+                credentials: 'include', // To send the cookie
+            });
+    
+            if (response.status === 204) {
+                localStorage.removeItem('userName'); // Optionally clear local storage
+                props.onLogout(); // Trigger any parent component state updates (like showing the login form again)
+            } else {
+                setDisplayError('⚠ Error: Unable to log out');
+            }
+        } catch (error) {
+            setDisplayError(`⚠ Error: ${error.message}`);
         }
     }
+    
 
     return (
         <div>
@@ -26,7 +30,7 @@ export function Authenticated(props) {
             <Button variant='primary' onClick={() => navigate('/invest')}>
                 Invest
             </Button>
-            <Button variant='secondary' onClick={() => logout()}>
+            <Button variant='secondary' onClick={() => logoutUser()}>
                 Logout
             </Button>
         </div>
