@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const path = require('path');
-const DB = require('./database.js');  // Import the database module
+const DB = require('./database.js');
 
 const app = express();
 const authCookieName = 'token';
