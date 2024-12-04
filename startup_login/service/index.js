@@ -9,7 +9,7 @@ const app = express();
 const authCookieName = 'token';
 
 // The service port may be set on the command line
-const port = process.argv.length > 2 ? process.argv[2] : 3000;
+const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
 // JSON body parsing using built-in middleware
 app.use(express.json());
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Serve up the application's static content
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Trust headers that are forwarded from the proxy so we can determine IP addresses
 app.set('trust proxy', true);
@@ -47,6 +47,7 @@ apiRouter.post('/auth/create', async (req, res) => {
 // GetAuth token for the provided credentials
 apiRouter.post('/auth/login', async (req, res) => {
   const user = await DB.getUser(req.body.email);
+  console.log('Request body:', req.body);
   if (user) {
     if (await bcrypt.compare(req.body.password, user.password)) {
       setAuthCookie(res, user.token);
@@ -80,7 +81,7 @@ secureApiRouter.use(async (req, res, next) => {
 
 // Serve React app for all unknown routes
 app.use((_req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile('index.html', { root: path.join(__dirname, 'public') });
 });
 
 // setAuthCookie in the HTTP response
