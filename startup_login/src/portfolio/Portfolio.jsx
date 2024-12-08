@@ -71,7 +71,6 @@ const Portfolio = () => {
               ))}
             </tbody>
           </table>
-          <h3>Total Portfolio Value: ${totalValue}</h3>
         </section>
       </main>
     </div>

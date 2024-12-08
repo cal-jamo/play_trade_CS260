@@ -1,38 +1,64 @@
-class ShareEventNotifier {
-        constructor() {
+const GameEvent = {
+    System: 'system',
+    End: 'gameEnd',
+    Start: 'gameStart',
+    Purchase: 'purchase',
+};
+
+class EventMessage {
+    constructor(from, type, value) {
+    this.from = from;
+    this.type = type;
+    this.value = value;
+    }
+}
+
+class GameEventNotifier {
+    static instance;
+    events = [];
+    handlers = [];
+
+    constructor() {
+        if (GameEventNotifier.instance) {
+            return GameEventNotifier.instance;
+        }
+        GameEventNotifier.instance = this;  // Save singleton instance
         let port = window.location.port;
         const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
         this.socket = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
-        
-        this.socket.onopen = () => {
-            console.log('WebSocket connection established');
+        this.socket.onmessage = async (msg) => {
+            try {
+            const event = JSON.parse(await msg.data.text());
+            this.receiveEvent(event);
+            } catch {}
         };
+    }
+
     
-        this.socket.onclose = () => {
-            console.error('WebSocket connection closed');
-        };
-    
-        this.socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-        }
-    
-        broadcastShareBoughtEvent(from, teamName, price, date) {
-            console.log('Broadcasting share bought event');
-            if (this.socket.readyState === WebSocket.OPEN) {
-                const event = {
-                from,
-                type: 'shareBought',
-                value: { teamName, price, date },
-                };
-                this.socket.send(JSON.stringify(event));
-                console.log('Share bought event sent', event);
-            } else {
-                console.error('WebSocket is not open. ReadyState:', this.socket.readyState);
-            }
-        }
+
+    broadcastEvent(from, type, value) {
+    const event = new EventMessage(from, type, value);
+    this.socket.send(JSON.stringify(event));
+    }
+
+    addHandler(handler) {
+    this.handlers.push(handler);
+    }
+
+    removeHandler(handler) {
+    this.handlers.filter((h) => h !== handler);
+    }
+
+    receiveEvent(event) {
+    this.events.push(event);
+
+    this.events.forEach((e) => {
+        this.handlers.forEach((handler) => {
+        handler(e);
+        });
+    });
+    }
 }
 
-const ShareNotifier = new ShareEventNotifier();
-export { ShareNotifier };
-  
+const GameNotifier = new GameEventNotifier();
+export { GameEvent, GameNotifier };

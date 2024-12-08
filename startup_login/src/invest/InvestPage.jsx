@@ -1,54 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { ShareNotifier } from './purchaseNotifier'; // Import the custom notifier
+import { GameEvent, GameNotifier } from './purchaseNotifier'; // Import the custom notifier
 
 const InvestPage = () => {
   const [balance, setBalance] = useState();
   const [error, setError] = useState('');
   const [teams, setTeams] = useState([]);
   const [user, setUser] = useState('');
-  const [messages, setMessages] = useState([]); // State to store messages
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     fetch('/api/teams')
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setTeams(data);
-        } else {
-          setError('Failed to load teams');
-        }
-      })
-      .catch(() => setError('Failed to load teams'));
+        .then((response) => response.json())
+        .then((data) => {
+            if (Array.isArray(data)) {
+                setTeams(data);
+            } else {
+                setError('Failed to load teams');
+            }
+        })
+        .catch(() => setError('Failed to load teams'));
 
     fetch('/api/user')
-      .then((response) => response.json())
-      .then((data) => {
-        if (data) {
-          setUser(data);
-        } else {
-          setError('Failed to load user');
-        }
-        if (data.balance) {
-          setBalance(data.balance);
-        } else {
-          setError('Failed to load user balance');
-        }
-      })
-      .catch(() => setError('Failed to load user balance'));
+        .then((response) => response.json())
+        .then((data) => {
+            if (data) {
+                setUser(data);
+            } else {
+                setError('Failed to load user');
+            }
+            if (data.balance) {
+                setBalance(data.balance);
+            } else {
+                setError('Failed to load user balance');
+            }
+        })
+        .catch(() => setError('Failed to load user balance'));
 
-    // Listen for WebSocket messages and update the state
-    ShareNotifier.socket.onmessage = (msg) => {
-      console.log('WebSocket message received:', msg); // Debug: Log the raw message
-      try {
-        const event = JSON.parse(msg.data);
-        if (event.type === 'shareBought') {
-          setMessages((prevMessages) => [event, ...prevMessages]);
-        }
-      } catch (error) {
-        console.error('Error parsing WebSocket message:', error);
-      }
+    // Add the event handler
+    GameNotifier.addHandler(handleGameEvent);
+
+    // Cleanup: Remove the event handler when the component unmounts
+    return () => {
+        GameNotifier.removeHandler(handleGameEvent);
     };
-  }, []);
+}, []);
+
 
   async function handlePurchase(index) {
     const team = teams[index];
@@ -70,39 +66,48 @@ const InvestPage = () => {
         )
       );
 
-      // Broadcast the share bought event via WebSocket
-      ShareNotifier.broadcastShareBoughtEvent(user.email, team.name, team.price, date);
-      
-      setMessages((prevMessages) => [
-        {
-          type: 'shareBought',
-          from: user.email,
-          value: { teamName: team.name, price: team.price, date },
-        },
-        ...prevMessages,
-      ]);
-
     } else {
       setError('Insufficient balance to make the purchase');
     }
+  }
+
+  function handleGameEvent(event) {
+    setEvents((prevEvents) => [...prevEvents, event]);
+}
+
+  function createMessageArray() {
+      const messageArray = [];
+      for (const [i, event] of events.entries()) {
+          let message = 'unknown';
+          if (event.type === GameEvent.End) {
+              message = `scored ${event.value.score}`;
+          } else if (event.type === GameEvent.Start) {
+              message = `started a new game`;
+          } else if (event.type === GameEvent.Purchase) {
+              message = ` purchased a share of their favorite team`;
+          }
+
+          messageArray.push(
+              <div key={i} className='event'>
+                  <span className={'player-event'}>{event.from.split('@')[0]}</span>
+                  {message}
+              </div>
+          );
+      }
+      return messageArray;
+  }
+
+  async function reset() {
+      GameNotifier.broadcastEvent(user.email, GameEvent.Purchase, {});
   }
 
   return (
     <div className="container mt-5 d-flex">
       {/* Sidebar for messages */}
       <div className="sidebar bg-light p-3"
-      style={{ color: 'black', width: '20%', borderRight: '1px solid #ddd', height: '100vh', overflowY: 'auto', marginRight: '30px' }}>
-
-        <h5>Activity Log</h5>
-        <ul className="list-unstyled">
-          {messages.map((message, index) => (
-            <li key={index} className="mb-2">
-              <strong>{message?.value?.teamName || 'Unknown Team'}</strong> share bought by {message?.from || 'Unknown User'} for 
-              ${message?.value?.price || 'Unknown Price'} on {message?.value?.date || 'Unknown Date'}.
-            </li>
-          ))}
-        </ul>
-
+                style={{ color: 'black', width: '20%', borderRight: '1px solid #ddd', height: '100vh', overflowY: 'auto', marginRight: '30px' }}>
+                <h5>Activity Log</h5>
+                <div id='player-messages'>{createMessageArray()}</div>
       </div>
 
       {/* Main content */}
@@ -120,7 +125,10 @@ const InvestPage = () => {
                   <p className="card-text">Price: ${team.price}</p>
                   <p className="card-text">Shares: {team.shares}</p>
                   <button
-                    onClick={() => handlePurchase(index)}
+                    onClick={() => {
+                      handlePurchase(index);
+                      reset(index);
+                    }}
                     className="btn btn-success mt-3"
                     disabled={team.shares === 0} // Disable button if no shares are left
                   >
