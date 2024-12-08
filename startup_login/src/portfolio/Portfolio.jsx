@@ -1,15 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Portfolio = () => {
-  // Example portfolio data
-  const portfolio = [
-    { name: 'BYU Football', price: 35, shares: 4 },
-    { name: 'Suns', price: 57, shares: 3 },
-    { name: 'Dodgers', price: 73, shares: 5 },
-  ];
+  const [portfolio, setPortfolio] = useState([]);
+  const [totalValue, setTotalValue] = useState(0);
 
-  // Calculate total portfolio value
-  const totalValue = portfolio.reduce((sum, team) => sum + team.price * team.shares, 0);
+  useEffect(() => {
+    const fetchPortfolio = async () => {
+      const response = await fetch('/api/portfolio');
+      const data = await response.json();
+      console.log(data);
+      setPortfolio(data);
+
+      let total = 0;
+      data.forEach((team) => {
+        total += team.price * team.shares;
+      });
+      setTotalValue(total);
+    };
+
+    fetchPortfolio();
+  }, []);
+
+  const sellShare = async (index) => {
+    const team = portfolio[index];
+    const newSellBack = { teamName: team.teamName, price: team.price };
+
+    await fetch('/api/sell', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(newSellBack),
+    });
+
+    // Update the portfolio locally
+    setPortfolio((prevPortfolio) =>
+      prevPortfolio.map((t, i) =>
+        i === index ? { ...t, shares: t.shares - 1 } : t
+      )
+      // Filter out teams with 0 shares
+      .filter((t) => t.shares > 0)
+    );
+  }
 
   return (
     <div>
@@ -28,18 +58,20 @@ const Portfolio = () => {
             <tbody>
               {portfolio.map((team, index) => (
                 <tr key={index}>
-                  <td>{team.name}</td>
+                  <td>{team.teamName}</td>
                   <td>${team.price}</td>
                   <td>{team.shares}</td>
                   <td>${team.price * team.shares}</td>
+                  <td>
+                    <button onClick={() => sellShare(index)} disabled={team.shares === 0}>
+                      Sell
+                    </button>
+                  </td>
                 </tr>
               ))}
-              <tr>
-                <td colSpan="3" className="text-end fw-bold">Total Portfolio Value:</td>
-                <td className="fw-bold">${totalValue}</td>
-              </tr>
             </tbody>
           </table>
+          <h3>Total Portfolio Value: ${totalValue}</h3>
         </section>
       </main>
     </div>

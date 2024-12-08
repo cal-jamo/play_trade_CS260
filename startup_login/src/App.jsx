@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Login } from './login/Login';
 import InvestPage from './invest/InvestPage';
@@ -8,11 +8,29 @@ import Portfolio from './portfolio/Portfolio';
 import { AuthState } from './login/authState';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { NavLink } from 'react-router-dom';
+import { use } from 'react';
+import AdminPage from './admin/AdminPage';
 
 function App() {
   const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
   const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
+  const [user, setUser] = useState('');
   const [authState, setAuthState] = React.useState(currentAuthState);
+
+  useEffect(() => {
+    fetch('/api/user')
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          setUser(data);
+        } else {
+          setError('Failed to load user');
+        }
+      })
+      .catch(() => setError('Failed to load user balance'))
+      }, []);
+  
+  console.log('user:', user);
 
   return (
     <BrowserRouter>
@@ -39,6 +57,11 @@ function App() {
               {authState === AuthState.Authenticated && (
                   <NavLink className='nav-link mx-2' to='portfolio'>
                     Portfolio
+                  </NavLink>
+              )}
+              {user.isAdmin && (
+                  <NavLink className='nav-link mx-2' to='admin'>
+                    Admin
                   </NavLink>
               )}
                 <NavLink className='nav-link mx-2' to='home'>
@@ -68,6 +91,7 @@ function App() {
             <Route path="/sportsNews" element={<SportsNews />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </main>
         <footer className="bg-dark text-white-50 text-center py-3 m-0 p-0">

@@ -60,3 +60,15 @@ For this startup I transitioned everything I have to react. I used started with 
 ### Service startup:
 
 For this startup I set up my backend to allow for authentication and set up a 3rd party api to get sports news so you can stay up to date on teams and players doing well, and that info will guide your investments!
+
+### Login Startup:
+
+I set up mongo DB to use that for authentication now, as well as setting up admin settings etc.
+
+### WebSocket:
+
+I use a websocket to display the activity log on the investment page. After the class I will no longer use this feature but added it for the project! 
+
+### Full functionality:
+
+When you create an account you are given 2000 to invest. You can invest in teams and sell them under your portfolio. Your owned shares are saved in mongo DB as well as your purchases. If you are an Admin you also have access to the shares panel where I can create new shares, teams, and adjust the price on shares according to the performance of teams. Sports news uses a 3rd party aPI so you can see sports news. When A team has injuries, wins etc. I can adjust the prices. A fun platform for you and your friends to invest in teams throughout a season and is ready for use!

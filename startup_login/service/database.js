@@ -7,6 +7,8 @@ const uri = "mongodb+srv://calvinjameson02:FishBrainsAreGood2@play-trade-260.eru
 const client = new MongoClient(uri);
 const db = client.db('playtrade_cs260');
 const userCollection = db.collection('user');
+const teamsCollection = db.collection('teams');
+const communityMessagesCollection = db.collection('communityMessages');
 
 // This will asynchronously test the connection and exit the process if it fails
 (async function testConnection() {
@@ -32,6 +34,9 @@ async function createUser(email, password) {
   const user = {
     email: email,
     password: passwordHash,
+    balance: 2000,
+    ownedShares: [],
+    isAdmin: false,
     token: uuid.v4(),
   };
   await userCollection.insertOne(user);
@@ -39,16 +44,78 @@ async function createUser(email, password) {
   return user;
 }
 
+function getTeams() {
+  const query = {};
+  const options = {
+    sort: { team: 1 },
+  };
+  const cursor = teamsCollection.find(query, options);
+  return cursor.toArray();
+}
+
+function getTeamByName(teamName) {
+  console.log('teamName:', teamName);
+  return teamsCollection.findOne({ name : teamName });
+}
+
+async function updateTeamShares(teamName, shares) {
+  await teamsCollection.updateOne(
+    { name: teamName },
+    { $set: { shares: shares } }
+  );
+}
+
+async function updateTeam(teamName, updates) {
+  await teamsCollection.updateOne(
+    { name: teamName },
+    { $set: updates }
+  );
+}
+
+async function addTeam(team) {
+  await teamsCollection.insertOne(team);
+}
+
+async function updateUser(userId, updates) {
+  await userCollection.updateOne(
+    { _id: userId },
+    { $set: updates }
+  );
+}
+
+async function updateUserOwnedShares(userId, ownedShares) {
+  await userCollection.updateOne(
+    { _id: userId },
+    { $set: { ownedShares: ownedShares } }
+  );
+}
+
+async function updateUserBalance(userId, balance) {
+  await userCollection.updateOne(
+    { _id: userId },
+    { $set: { balance: balance } }
+  );
+}
+
+
 async function removeToken(userId) {
     await userCollection.updateOne(
         { _id: userId },
         { $unset: { token: "" } } // Remove the token field
     );
 }
-  
+
 module.exports = {
     getUser,
     getUserByToken,
     createUser,
-    removeToken, // Add the new function to the export
+    getTeams,
+    updateTeamShares,
+    updateUser,
+    updateUserOwnedShares,
+    updateTeam,
+    addTeam,
+    removeToken,
+    updateUserBalance,
+    getTeamByName,
 };
