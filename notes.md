@@ -88,3 +88,79 @@ an asynchronous action that logs the resolved or rejected value of the promise.
 ### REACT:
 
 I love how impactful using a router can be. You can then just implement all of your containers and create uniformity using the router!
+
+
+### Default ports for HTTP/HTTPS/SSH
+- HTTP: 80, HTTPS: 443, SSH: 22.
+
+### HTTP status codes in the range of 300/400/500 indicate:
+- **300:** Redirection (e.g., resource moved).
+- **400:** Client error (e.g., bad request).
+- **500:** Server error (e.g., internal server issue).
+
+### HTTP header `Content-Type` allows you to:
+- Specify the media type of the resource (e.g., `application/json`, `text/html`) to inform the client how to process the content.
+
+### Secure/Http-only/Same-site cookies do:
+- **Secure cookie:** Transmitted only over HTTPS.
+- **Http-only cookie:** Not accessible via JavaScript, reducing XSS risks.
+- **Same-site cookie:** Restricts cookies to same-origin requests to mitigate CSRF attacks.
+
+### Express middleware console.log output for `/api/document`:
+- The output depends on the middleware logic, such as the `req.method` and `req.path` values being logged.
+
+### Express service fetch response:
+- The fetch result depends on the backend's HTTP response (e.g., JSON data, status code).
+
+### MongoDB query `{name: Mark}` matching documents:
+- Returns all documents where the `name` field equals "Mark."
+
+### How should user passwords be stored?
+- Use a strong, slow cryptographic hash function (e.g., bcrypt, Argon2) with unique salts for each password.
+
+### WebSocket code front-end console log:
+- Logs depend on the backend's WebSocket messages and the front-end's `onmessage` handler logic.
+
+### WebSocket protocol provides:
+- Full-duplex communication over a single TCP connection, ideal for real-time applications.
+
+### Acronyms meanings:
+- JSX: JavaScript XML, JS: JavaScript, AWS: Amazon Web Services, NPM: Node Package Manager, NVM: Node Version Manager.
+
+### React component text content generation:
+- The text content is determined by the `props` passed to the component and how they are rendered in JSX.
+
+### React components including each other:
+- Generates a nested structure based on the components' render output.
+
+### React component with `React.useState`:
+- Manages state within a functional component, providing a getter and setter for the state variable.
+
+### React Hooks are used for:
+- Managing state, side effects, and other React features in functional components.
+
+### State/Context/Ref/Effect/Performance Hooks:
+- **State Hook:** Manage local state.
+- **Context Hook:** Access global state.
+- **Ref Hook:** Access DOM elements or persist values across renders.
+- **Effect Hook:** Handle side effects (e.g., fetching data).
+- **Performance Hook:** Optimize rendering and memoization.
+
+### React Router code statements:
+- Statements about route matching, navigation, or rendering components based on URLs are evaluated for correctness.
+
+### `package.json` file:
+- Defines project metadata, dependencies, scripts, and configurations for Node.js applications.
+
+### Fetch function:
+- Makes HTTP requests from the browser or Node.js, returning a promise that resolves to the response.
+
+### Node.js:
+- A runtime for executing JavaScript on the server, built on Chrome's V8 engine.
+
+### PM2:
+- A process manager for Node.js applications, handling scaling, monitoring, and automatic restarts.
+
+### Vite:
+- A fast build tool and development server for modern web projects, optimized for speed and modularity.
+
