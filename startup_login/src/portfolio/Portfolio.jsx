@@ -53,6 +53,8 @@ const Portfolio = () => {
                 <th>Price Per Share</th>
                 <th>Shares Owned</th>
                 <th>Total Value</th>
+                <th>Action</th>
+                <th>Total Portfolio Value: ${totalValue}</th>
               </tr>
             </thead>
             <tbody>

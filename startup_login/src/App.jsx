@@ -46,7 +46,7 @@ function App() {
                 </NavLink>
               {authState === AuthState.Authenticated && (
                   <NavLink className='nav-link mx-2' to='sportsNews'>
-                    Sports News
+                    News
                   </NavLink>
               )}
               {authState === AuthState.Authenticated && (
