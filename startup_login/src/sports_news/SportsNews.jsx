@@ -2,35 +2,42 @@
 import React, { useEffect, useState } from 'react';
 
 const SportsNews = () => {
-    const [articles, setArticles] = useState(null);
+    const [article, setArticle] = useState(null);
+    const [advice, setAdvice] = useState(null);
 
     useEffect(() => {
-        fetch('https://newsapi.org/v2/top-headlines?country=us&category=sports&apiKey=72fba5b14dc14f968aea3812b9bcdf92')
+        fetch('https://hacker-news.firebaseio.com/v0/item/8863.json?print=pretty')
             .then((res) => res.json())
             .then((jsonResponse) => {
                 console.log(jsonResponse);
-                setArticles(jsonResponse.articles);
+                setArticle(jsonResponse);
+            })
+            .catch((error) => {
+                console.error('Error fetching the article:', error);
+            });
+
+        fetch('https://gomezmig03.github.io/MotivationalAPI/en.json')
+            .then((res) => res.json())
+            .then((jsonResponse) => {
+                const randomAdvice = jsonResponse[Math.floor(Math.random() * jsonResponse.length)];
+                setAdvice(randomAdvice);
+            })
+            .catch((error) => {
+                console.error('Error fetching the advice:', error);
             });
     }, []);
 
     return (
-      <div className='text-white container mb-4'>
-      <h1 className='text-center display-4 mb-4'>Sports News</h1>
+      <div className='text-white container mb-2'>
+      <h1 className='text-center mb-5'>Here is some hacker news and advice</h1>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-          {articles && articles.map((article, index) => (
-            <div key={index} className="col">
+          {article && (
+            <div className="row">
               <div className="card h-100 border-light bg-secondary text-white">
-                {article.urlToImage && (
-                  <img
-                    src={article.urlToImage}
-                    className="card-img-top"
-                    alt={article.title}
-                    style={{ objectFit: 'cover', maxHeight: '200px' }}
-                  />
-                )}
                 <div className="card-body">
                   <h5 className="card-title text-center">{article.title}</h5>
-                  <p className="card-text text-center">{article.description}</p>
+                  <p className="card-text text-center">By: {article.by}</p>
+                  <p className="card-text text-center">Score: {article.score}</p>
                 </div>
                 <div className="card-footer text-center">
                   <a
@@ -39,15 +46,21 @@ const SportsNews = () => {
                     rel="noopener noreferrer"
                     className="btn btn-outline-light"
                   >
-                    Read more at {article.source.name}
+                    Read more
                   </a>
                 </div>
               </div>
             </div>
-          ))}
+          )}
+          {advice && (
+          <div className="mt-4">
+            <h2 className="text-center">Random Advice</h2>
+            <p className="text-center">{advice.phrase}</p>
+            <p className="text-center"><em>- {advice.author}</em></p>
+          </div>
+        )}
         </div>
       </div>
-    
     );
 };
 
